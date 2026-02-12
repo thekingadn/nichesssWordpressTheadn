@@ -59,6 +59,20 @@ function nichesss_ai_generate_article($theme = '', $sujet = '') {
     if ($post_id) {
         add_post_meta($post_id, 'nichesss_personna', $personna['name']);
     }
+    // Optimisation SEO post-création
+    if ($post_id) {
+        // Générer une meta description (extrait ou résumé)
+        $meta_desc = mb_substr(strip_tags($data['content']), 0, 155);
+        update_post_meta($post_id, '_yoast_wpseo_metadesc', $meta_desc);
+        // Générer un focus keyword (mot-clé principal)
+        $focus_kw = $theme ?: $sujet;
+        if ($focus_kw) {
+            update_post_meta($post_id, '_yoast_wpseo_focuskw', $focus_kw);
+        }
+        // Générer un titre SEO optimisé
+        $seo_title = ($data['title'] ?? $prompt) . ' | ' . get_bloginfo('name');
+        update_post_meta($post_id, '_yoast_wpseo_title', $seo_title);
+    }
     return $post_id;
 }
 
